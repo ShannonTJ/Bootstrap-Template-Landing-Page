@@ -1,6 +1,6 @@
 # javascript-snake
 https://shan-snake.netlify.app/
 
-CONTROLS
+CONTROLS:
 
 Movement - Arrow Keys
