@@ -1,9 +1,10 @@
 let lastRenderTime = 0;
 let inputDirection = { x: 0, y: -1 }; //default direction is moving up
-let food = { x: 10, y: 1 };
+let food = getRandomFoodPosition();
 let newSegments = 0;
 
 const gameGrid = document.getElementById("game-grid");
+const GRID_SIZE = 21;
 const SNAKE_SPEED = 4;
 const EXPANSION_RATE = 1; //how much the snake grows after eating food
 const snakeBody = [{ x: 11, y: 11 }]; //draw snake in the middle of the screen
@@ -28,6 +29,21 @@ window.addEventListener("keydown", (e) => {
       break;
   }
 });
+
+function getRandomFoodPosition() {
+  let newFoodPosition;
+  while (newFoodPosition === null || eat(newFoodPosition)) {
+    newFoodPosition = randomGridPosition();
+  }
+  return newFoodPosition;
+}
+
+function randomGridPosition() {
+  return {
+    x: Math.floor(Math.random() * GRID_SIZE) + 1,
+    y: Math.floor(Math.random() * GRID_SIZE) + 1,
+  };
+}
 
 function getInput() {
   lastInputDirection = inputDirection;
@@ -67,7 +83,7 @@ function update() {
 
   if (eat(food)) {
     expandSnake(EXPANSION_RATE);
-    food = { x: 20, y: 1 };
+    food = getRandomFoodPosition();
   }
 }
 
