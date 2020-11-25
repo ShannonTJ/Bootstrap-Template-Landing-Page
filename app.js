@@ -1,9 +1,11 @@
 let lastRenderTime = 0;
 let inputDirection = { x: 0, y: -1 }; //default direction is moving up
-let food = { x: 0, y: 0 };
+let food = { x: 10, y: 1 };
+let newSegments = 0;
 
 const gameGrid = document.getElementById("game-grid");
 const SNAKE_SPEED = 4;
+const EXPANSION_RATE = 1; //how much the snake grows after eating food
 const snakeBody = [{ x: 11, y: 11 }]; //draw snake in the middle of the screen
 
 window.addEventListener("keydown", (e) => {
@@ -51,6 +53,7 @@ function main(currentTime) {
 }
 
 function update() {
+  addSegments();
   const inputDirection = getInput();
   //start the iteration at the second-last segment
   for (let i = snakeBody.length - 2; i >= 0; i--) {
@@ -61,6 +64,33 @@ function update() {
   //move the head independently
   snakeBody[0].x += inputDirection.x;
   snakeBody[0].y += inputDirection.y;
+
+  if (eat(food)) {
+    expandSnake(EXPANSION_RATE);
+    food = { x: 20, y: 1 };
+  }
+}
+
+function expandSnake(amount) {
+  newSegments = newSegments + amount;
+}
+
+function addSegments() {
+  for (let i = 0; i < newSegments; i++) {
+    //duplicate the last segment of our snake and push it on the end
+    snakeBody.push({ ...snakeBody[snakeBody.length - 1] });
+  }
+  newSegments = 0;
+}
+
+function eat(position) {
+  return snakeBody.some((segment) => {
+    return equalPositions(segment, position);
+  });
+}
+
+function equalPositions(pos1, pos2) {
+  return pos1.x === pos2.x && pos1.y === pos2.y;
 }
 
 function draw(gameGrid) {
@@ -74,6 +104,12 @@ function draw(gameGrid) {
     snakeElement.classList.add("snake"); //color the snake blocks
     gameGrid.appendChild(snakeElement); //add snake segments to the grid
   });
+
+  const foodElement = document.createElement("div");
+  foodElement.style.gridColumnStart = food.x;
+  foodElement.style.gridRowStart = food.y;
+  foodElement.classList.add("food");
+  gameGrid.appendChild(foodElement);
 }
 
 requestAnimationFrame(main);
