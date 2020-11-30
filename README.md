@@ -1,5 +1,5 @@
 # javascript-snake
-https://shan-snake.netlify.app/
+https://shan-javascript-snake.netlify.app/
 
 CONTROLS:
 
